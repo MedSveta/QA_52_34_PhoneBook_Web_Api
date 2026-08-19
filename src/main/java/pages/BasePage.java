@@ -28,7 +28,17 @@ public abstract class BasePage {
         return false;
     }
 
-    public String closeAlert(){
+    public boolean isUrlContainsText(String text) {
+        try {
+            return new WebDriverWait(driver, Duration.ofSeconds(5))
+                    .until(ExpectedConditions.urlContains(text));
+        } catch (RuntimeException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public String closeAlert() {
         Alert alert = new WebDriverWait(driver, Duration.ofSeconds(5))
                 .until(ExpectedConditions.alertIsPresent());
         String text = alert.getText();
