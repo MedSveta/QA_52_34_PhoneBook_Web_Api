@@ -22,18 +22,18 @@ public class AddNewContactApiTests implements BaseApi, ILogin {
     SoftAssert softAssert = new SoftAssert();
 
     @BeforeClass
-    public void login(){
+    public void login() {
         tokenDto = loginGetToken();
     }
 
     @Test
-    public void addNewContactPositiveTest(){
+    public void addNewContactPositiveTest() {
         ContactDto contact = positiveContact();
         System.out.println(contact);
         System.out.println(tokenDto.getToken());
         RequestBody requestBody = RequestBody.create(GSON.toJson(contact), JSON);
         Request request = new Request.Builder()
-                .url(BASE_URL+ADD_CONTACT)
+                .url(BASE_URL + ADD_CONTACT)
                 .addHeader(AUTH, tokenDto.getToken())
                 .post(requestBody)
                 .build();
@@ -45,14 +45,15 @@ public class AddNewContactApiTests implements BaseApi, ILogin {
         }
         Assert.assertEquals(response.code(), 200);
     }
+
     @Test
-    public void addNewContactWithSoftAssertPositiveTest(){
+    public void addNewContactWithSoftAssertPositiveTest() {
         ContactDto contact = positiveContact();
         System.out.println(contact);
         System.out.println(tokenDto.getToken());
         RequestBody requestBody = RequestBody.create(GSON.toJson(contact), JSON);
         Request request = new Request.Builder()
-                .url(BASE_URL+ADD_CONTACT)
+                .url(BASE_URL + ADD_CONTACT)
                 .addHeader(AUTH, tokenDto.getToken())
                 .post(requestBody)
                 .build();
@@ -65,8 +66,8 @@ public class AddNewContactApiTests implements BaseApi, ILogin {
         ResponseMessageDto responseMessageDto;
         try {
             responseMessageDto =
-            GSON.fromJson(response.body().string(),
-                    ResponseMessageDto.class);
+                    GSON.fromJson(response.body().string(),
+                            ResponseMessageDto.class);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -74,8 +75,64 @@ public class AddNewContactApiTests implements BaseApi, ILogin {
         softAssert.assertEquals(response.code(),
                 200, "validate status code");
         softAssert.assertTrue(responseMessageDto.getMessage()
-                .contains("Contact was added!"),
+                        .contains("Contact was added!"),
                 "validate message");
         softAssert.assertAll();
+    }
+
+    @Test
+    public void addNewContactWrongTokenNegativeTest() {
+        ContactDto contact = positiveContact();
+        System.out.println(tokenDto.getToken());
+        RequestBody requestBody = RequestBody.create(GSON.toJson(contact), JSON);
+        Request request = new Request.Builder()
+                .url(BASE_URL + ADD_CONTACT)
+                .addHeader(AUTH, "tokenDto.getToken()")
+                .post(requestBody)
+                .build();
+        Response response;
+        try {
+            response = OK_HTTP_CLIENT.newCall(request).execute();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        Assert.assertEquals(response.code(), 401);
+    }
+
+    @Test
+    public void addNewContactWOTokenNegativeTest() {
+        ContactDto contact = positiveContact();
+        System.out.println(tokenDto.getToken());
+        RequestBody requestBody = RequestBody.create(GSON.toJson(contact), JSON);
+        Request request = new Request.Builder()
+                .url(BASE_URL + ADD_CONTACT)
+                .post(requestBody)
+                .build();
+        Response response;
+        try {
+            response = OK_HTTP_CLIENT.newCall(request).execute();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        Assert.assertEquals(response.code(), 403);
+    }
+
+    @Test
+    public void addNewContactEmptyTokenNegativeTest() {
+        ContactDto contact = positiveContact();
+        System.out.println(tokenDto.getToken());
+        RequestBody requestBody = RequestBody.create(GSON.toJson(contact), JSON);
+        Request request = new Request.Builder()
+                .url(BASE_URL + ADD_CONTACT)
+                .addHeader(AUTH, "")
+                .post(requestBody)
+                .build();
+        Response response;
+        try {
+            response = OK_HTTP_CLIENT.newCall(request).execute();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        Assert.assertEquals(response.code(), 403);
     }
 }

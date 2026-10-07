@@ -12,8 +12,7 @@ import java.util.List;
 
 public class UserDataProvider {
     @DataProvider
-    public Iterator<UserLombok>
-    dataProviderWrongPasswordOrEmail() {
+    public Iterator<UserLombok> dataProviderWrongPasswordOrEmail() {
         List<UserLombok> list = new ArrayList<>();
         try (BufferedReader bufferedReader = new BufferedReader
                 (new FileReader("src/test/resources" +
