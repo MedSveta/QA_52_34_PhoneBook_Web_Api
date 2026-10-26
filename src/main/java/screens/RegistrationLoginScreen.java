@@ -27,4 +27,8 @@ public class RegistrationLoginScreen extends BaseScreen {
     public void clickBtnRegistration(){
         clickWait(btnRegistration);
     }
+
+    public void clickBtnLogin(){
+        clickWait(btnLogin);
+    }
 }
