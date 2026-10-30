@@ -1,5 +1,6 @@
 package screens;
 
+import dto.ContactDto;
 import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.pagefactory.AndroidFindBy;
 import org.openqa.selenium.WebElement;
@@ -23,4 +24,18 @@ public class AddContactScreen extends BaseScreen{
     WebElement inputDesc;
     @AndroidFindBy(id = "com.sheygam.contactapp:id/createBtn")
     WebElement btnCreate;
+
+
+    public void typeAddNewContactForm(ContactDto contact) {
+        inputName.sendKeys(contact.getName());
+        inputLastName.sendKeys(contact.getLastName());
+        inputEmail.sendKeys(contact.getEmail());
+        inputPhone.sendKeys(contact.getPhone());
+        inputAddress.sendKeys(contact.getAddress());
+        inputDesc.sendKeys(contact.getDescription());
+    }
+
+    public void clickBtnCreate(){
+        btnCreate.click();
+    }
 }
